@@ -1,0 +1,10 @@
+<!-- templates/accounts/signup.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-2xl mb-4">Inscription</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-600 text-white px-4 py-2">S'inscrire</button>
+</form>
+{% endblock %}
