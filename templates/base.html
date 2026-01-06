@@ -1,68 +1,42 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}eMoney{% endblock %}</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome (icônes pro) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body>
 
-    <!-- Navbar -->
-    <nav class="bg-blue-800 text-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-wallet text-xl"></i>
-                <span class="font-bold text-xl">eMoney</span>
-            </div>
-            <div class="flex items-center space-x-4">
+    <nav>
+        <div>
+            <span>eMoney</span>
+            <div>
                 {% if user.is_authenticated %}
-                    <span class="hidden md:inline">Bonjour, <strong>{{ user.username }}</strong></span>
-                    <a href="{% url 'logout' %}" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm flex items-center">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Déconnexion
-                    </a>
+                    Bonjour, <strong>{{ user.username }}</strong>
+                    <a href="{% url 'logout' %}">Déconnexion</a>
                 {% endif %}
             </div>
         </div>
     </nav>
 
-    <div class="flex flex-1">
-        <!-- Sidebar -->
+    <div>
+
         {% if user.is_authenticated and user.status != 'suspended' %}
-        <aside class="w-64 bg-blue-800 text-blue-100 min-h-screen hidden md:block">
-            <div class="p-5 border-b border-blue-700">
-                <h2 class="text-lg font-semibold">Menu</h2>
-            </div>
-            <nav class="p-3">
-                <a href="{% url 'dashboard' %}" class="flex items-center p-3 rounded hover:bg-blue-700 mb-2 {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-900{% endif %}">
-                    <i class="fas fa-home mr-3"></i> Tableau de bord
-                </a>
-                <a href="{% url 'deposit' %}" class="flex items-center p-3 rounded hover:bg-blue-700 mb-2 {% if request.resolver_match.url_name == 'deposit' %}bg-blue-900{% endif %}">
-                    <i class="fas fa-plus-circle mr-3 text-green-400"></i> Dépôt
-                </a>
-                <a href="{% url 'transfer' %}" class="flex items-center p-3 rounded hover:bg-blue-700 mb-2 {% if request.resolver_match.url_name == 'transfer' %}bg-blue-900{% endif %}">
-                    <i class="fas fa-exchange-alt mr-3 text-blue-400"></i> Transfert
-                </a>
-                <a href="{% url 'withdraw' %}" class="flex items-center p-3 rounded hover:bg-blue-700 mb-2 {% if request.resolver_match.url_name == 'withdraw' %}bg-blue-900{% endif %}">
-                    <i class="fas fa-money-bill-wave mr-3 text-red-400"></i> Retrait
-                </a>
+        <aside>
+            <h2>Menu</h2>
+            <nav>
+                <a href="{% url 'dashboard' %}">Tableau de bord</a>
+                <a href="{% url 'deposit' %}">Dépôt</a>
+                <a href="{% url 'transfer' %}">Transfert</a>
+                <a href="{% url 'withdraw' %}">Retrait</a>
             </nav>
         </aside>
         {% endif %}
 
-        <!-- Contenu principal -->
-        <main class="flex-1 p-4 md:p-6">
+        <main>
             {% if messages %}
                 {% for message in messages %}
-                    <div class="mb-4 p-3 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                    <div>
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -70,21 +44,13 @@
 
             {% block content %}{% endblock %}
         </main>
+
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-6 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white"><i class="fas fa-envelope"></i></a>
-            </div>
-            <p class="text-gray-500 text-sm">
-                &copy; 2025 eMoney. Plateforme de transfert sécurisée. IFNTI Sokodé - Projet L3.
-            </p>
-        </div>
+    <footer>
+        <p>
+            &copy; 2025 eMoney. Plateforme de transfert sécurisée. IFNTI Sokodé - Projet L3.
+        </p>
     </footer>
 
 </body>

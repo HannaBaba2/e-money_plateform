@@ -1,6 +1,6 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm
@@ -56,7 +56,6 @@ def dashboard(request):
     if request.user.status == 'suspended':
         return render(request, 'accounts/dashboard.html', {'suspended': True})
     
-    # Récupère les 10 dernières transactions de l'utilisateur
     transactions = request.user.virtualaccount.sent_transactions.order_by('-created_at')[:10]
     
     return render(request, 'accounts/dashboard.html', {
@@ -69,8 +68,26 @@ def logout_view(request):
     logout(request)
     return redirect('signup')
 
+def home_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return render(request, 'home.html')  
 
 
-# accounts/views.py - dans dashboard
 
 
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            if user.status == 'active':
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Votre compte est suspendu ou en attente d'activation.")
+        else:
+            messages.error(request, "Identifiants invalides.")
+    return render(request, 'accounts/login.html')

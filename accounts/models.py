@@ -13,9 +13,9 @@ class TimeStampMixin(models.Model):
         abstract = True
 
 class UserStatus(models.TextChoices):
-    PENDING = 'pending', 'En attente'      # après inscription, avant OTP
-    ACTIVE = 'active', 'Actif'            # après validation OTP
-    SUSPENDED = 'suspended', 'Suspendu'   # par l’administrateur
+    PENDING = 'pending', 'En attente'     
+    ACTIVE = 'active', 'Actif'            
+    SUSPENDED = 'suspended', 'Suspendu'
 
 class Gender(models.TextChoices):
     MALE = 'M', 'Masculin'

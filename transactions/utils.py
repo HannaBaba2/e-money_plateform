@@ -1,4 +1,3 @@
-# transactions/utils.py
 from decimal import Decimal
 from django.db import transaction as db_transaction
 from accounts.models import VirtualAccount, User
@@ -7,10 +6,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-PLATFORM_FEE_RATE = Decimal('0.02')  # 2%
+PLATFORM_FEE_RATE = Decimal('0.02')  
 
 def deposit(user, amount):
-    """Effectue un dépôt sur le compte virtuel de l'utilisateur."""
     if amount <= 0:
         raise ValueError("Le montant du dépôt doit être positif.")
     
@@ -36,7 +34,6 @@ def deposit(user, amount):
         )
 
 def transfer(sender_user, receiver_phone, amount):
-    """Transfère un montant vers un autre utilisateur (par numéro de téléphone)."""
     if amount <= 0:
         raise ValueError("Le montant du transfert doit être positif.")
     
@@ -73,7 +70,6 @@ def transfer(sender_user, receiver_phone, amount):
         )
 
 def withdraw(user, amount):
-    """Effectue un retrait avec frais de 2 %. Génère 2 transactions : retrait + commission."""
     if amount <= 0:
         raise ValueError("Le montant du retrait doit être positif.")
     
@@ -85,11 +81,9 @@ def withdraw(user, amount):
         fee_amount = amount * PLATFORM_FEE_RATE
         net_amount = amount - fee_amount
 
-        # Débit total du compte utilisateur
         account.balance -= amount
         account.save()
 
-        # 1. Transaction de retrait (montant net remis à l'utilisateur)
         withdrawal_tx = Transaction(
             type=TypeTransaction.WITHDRAWAL,
             amount=net_amount,
@@ -101,7 +95,6 @@ def withdraw(user, amount):
         )
         withdrawal_tx.save()
 
-        # 2. Transaction de commission (vers la plateforme)
         try:
             platform_user = User.objects.get(username='platform')
             platform_account = platform_user.virtualaccount

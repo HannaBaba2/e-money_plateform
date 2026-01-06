@@ -141,7 +141,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -155,14 +154,38 @@ DEFAULT_FROM_EMAIL = 'traorehanna01@gmail.com'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {name} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logs/server.log',
+            'formatter': 'verbose',
         },
     },
     'root': {
         'handlers': ['file'],
+    },
+    'loggers': {
+        'transactions.utils': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'core.utils': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'accounts.views': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }

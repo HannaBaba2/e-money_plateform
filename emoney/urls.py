@@ -20,9 +20,13 @@ Including another URLconf
 # emoney/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from accounts import views as accounts_views
+
 
 urlpatterns = [
+    
+    path('', accounts_views.home_view, name='home'),  # page publique
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),           
+    path('accounts/', include('accounts.urls')),      
     path('transactions/', include('transactions.urls')),  
 ]

@@ -1,4 +1,3 @@
-# accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib import messages
@@ -51,7 +50,7 @@ class VirtualAccountAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at']
     
     def has_add_permission(self, request):
-        return False  # Pas de création manuelle
+        return True  
     
     def has_delete_permission(self, request, obj=None):
-        return False  # Pas de suppression
+        return True  

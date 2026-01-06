@@ -1,9 +1,11 @@
-# core/utils.py
+import logging  
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from .models import OTP
 import random
+
+logger = logging.getLogger('core')
 
 def generate_otp():
     return str(random.randint(100000, 999999))
@@ -27,4 +29,7 @@ def create_otp(user, minutes=2):
         expire_at=expire_at
     )
     send_otp_email(user.email, otp_code)
+
+    logger.info(f"[OTP] Code {otp_code} envoyé à {user.email} (valable {minutes} min)")
+
     return otp

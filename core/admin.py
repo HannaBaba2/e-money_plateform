@@ -1,4 +1,3 @@
-# core/admin.py
 from django.contrib import admin
 from .models import OTP
 
@@ -9,8 +8,7 @@ class OTPAdmin(admin.ModelAdmin):
         'user',
         'expire_at',
         'is_expired',
-        'created_at',      # ← hérité de TimeStampMixin
-        'updated_at'       # ← hérité de TimeStampMixin
+        'updated_at'       
     ]
     list_filter = ['is_expired', 'created_at', 'expire_at']
     search_fields = ['code', 'user__username', 'user__email']
@@ -24,10 +22,10 @@ class OTPAdmin(admin.ModelAdmin):
     ]
     
     def has_add_permission(self, request):
-        return False
+        return True
     
     def has_change_permission(self, request, obj=None):
-        return False
+        return True
     
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True

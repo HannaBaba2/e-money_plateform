@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Connexion - eMoney{% endblock %}
+{% block content %}
+<div>
+    <div>
+        <h1>Se connecter</h1>
+        <p>Accédez à votre compte eMoney</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="username">Nom d'utilisateur</label>
+            <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                required
+                placeholder="ex: Hanna_Traore"
+            >
+        </div>
+        <div>
+            <label for="password">Mot de passe</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                required 
+                placeholder="••••••••"
+            >
+        </div>
+        <button type="submit">
+            Se connecter
+        </button>
+    </form>
+
+    <p>
+        Pas encore de compte ? 
+        <a href="{% url 'signup' %}">
+            S’inscrire
+        </a>
+    </p>
+</div>
+{% endblock %}

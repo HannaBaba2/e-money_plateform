@@ -1,4 +1,3 @@
-# transactions/tests.py
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from accounts.models import VirtualAccount
@@ -43,7 +42,6 @@ class DepositTests(TestCase):
         with self.assertRaises(ValueError):
             deposit(self.user, 0)
 
-# transactions/tests.py — ajoute après les tests de dépôt
 
 class TransferTests(TestCase):
     def setUp(self):
@@ -88,7 +86,6 @@ class TransferTests(TestCase):
 
 
 
-# Ajoute ceci à la fin de transactions/tests.py
 
 
 class WithdrawalTests(TestCase):
@@ -100,7 +97,6 @@ class WithdrawalTests(TestCase):
             status="active"
         )
         VirtualAccount.objects.create(user=self.user, balance=10000)
-        # Crée le compte plateforme
         platform_user = User.objects.create_user(
             username="platform",
             email="p@p.com",
@@ -110,17 +106,14 @@ class WithdrawalTests(TestCase):
         VirtualAccount.objects.create(user=platform_user)
 
     def test_withdrawal_success(self):
-        # Simule l'envoi d'OTP et la confirmation
         create_otp(self.user, minutes=3)
         otp = OTP.objects.filter(user=self.user).latest('created_at')
         
-        # Effectue le retrait
         withdraw(self.user, 1000)
         
         self.user.virtualaccount.refresh_from_db()
         self.assertEqual(self.user.virtualaccount.balance, 9000)
         
-        # Vérifie les 2 transactions
         withdrawal_tx = Transaction.objects.get(type=TypeTransaction.WITHDRAWAL)
         fee_tx = Transaction.objects.get(type=TypeTransaction.FEE)
         

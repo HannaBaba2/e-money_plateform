@@ -1,4 +1,3 @@
-# accounts/forms.py
 from django import forms
 from django.contrib.auth import password_validation
 from .models import User

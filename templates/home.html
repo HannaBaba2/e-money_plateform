@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h1>Bienvenue sur eMoney</h1>
+    <p>Transférez de l’argent en toute sécurité au Togo.</p>
+    <div>
+        <a href="{% url 'login' %}">
+            Se connecter
+        </a>
+        <a href="{% url 'signup' %}">
+            S’inscrire
+        </a>
+    </div>
+</div>
+{% endblock %}
