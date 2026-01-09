@@ -5,8 +5,13 @@ from django.contrib import messages
 from .utils import deposit, transfer,withdraw
 from core.utils import create_otp
 
+
 @login_required
 def deposit_view(request):
+    if request.user.status != 'active':
+        messages.error(request, "Votre compte est suspendu ou en attente d'activation. Aucun dépôt n'est autorisé.")
+        return redirect('dashboard')
+    
     if request.method == "POST":
         try:
             amount = Decimal(request.POST.get("amount"))
@@ -20,8 +25,13 @@ def deposit_view(request):
             messages.error(request, "Montant invalide.")
     return render(request, "transactions/deposit.html")
 
+
 @login_required
 def transfer_view(request):
+    if request.user.status != 'active':
+        messages.error(request, "Votre compte est suspendu. Aucun transfert n'est autorisé.")
+        return redirect('dashboard')
+    
     if request.method == "POST":
         phone = request.POST.get("phone")
         try:
@@ -43,9 +53,13 @@ def transfer_view(request):
     
     return render(request, "transactions/transfer.html")
 
+
 @login_required
 def withdraw_view(request):
-    """Étape 1 : Demande le montant et envoie l'OTP (3 min)."""
+    if request.user.status != 'active':
+        messages.error(request, "Votre compte est suspendu. Aucun retrait n'est autorisé.")
+        return redirect('dashboard')
+    
     if request.method == "POST":
         try:
             amount = Decimal(request.POST.get("amount"))
@@ -68,9 +82,16 @@ def withdraw_view(request):
     
     return render(request, "transactions/withdraw.html")
 
+
 @login_required
 def confirm_withdraw_view(request):
-    """Étape 2 : Confirme le retrait avec OTP."""
+
+    if request.user.status != 'active':
+        messages.error(request, "Votre compte a été suspendu. Le retrait est annulé.")
+        if 'withdraw_amount' in request.session:
+            del request.session['withdraw_amount']
+        return redirect('dashboard')
+    
     amount_str = request.session.get('withdraw_amount')
     if not amount_str:
         messages.error(request, "Aucun retrait en cours.")

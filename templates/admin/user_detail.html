@@ -1,0 +1,66 @@
+<!-- templates/admin/user_detail.html -->
+{% extends 'base.html' %}
+{% block title %}Admin - Détails de {{ user.username }}{% endblock %}
+{% block content %}
+
+<h2>Détails de l'utilisateur : {{ user.username }}</h2>
+
+<ul>
+    <li><strong>Nom d'utilisateur :</strong> {{ user.username }}</li>
+    <li><strong>Email :</strong> {{ user.email }}</li>
+    <li><strong>Téléphone :</strong> {{ user.phone_number|default:"Non fourni" }}</li>
+    <li><strong>Genre :</strong> 
+        {% if user.gender == 'M' %}Masculin
+        {% elif user.gender == 'F' %}Féminin
+        {% else %}Non précisé{% endif %}
+    </li>
+    <li><strong>Statut actuel :</strong> 
+        {% if user.status == 'active' %}Actif
+        {% elif user.status == 'suspended' %}Suspendu
+        {% else %} En attente d'activation{% endif %}
+    </li>
+    <li><strong>Date d'inscription :</strong> {{ user.created_at|date:"d M Y à H:i" }}</li>
+</ul>
+
+<h3>Compte virtuel</h3>
+{% if user.virtualaccount %}
+    <p><strong>Solde :</strong> {{ user.virtualaccount.balance }} FCFA</p>
+{% else %}
+    <p>Aucun compte virtuel n'a été créé (compte non activé).</p>
+{% endif %}
+
+<h3>Actions disponibles</h3>
+{% if user.status == 'active' %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="suspend">
+        <button type="submit">
+            Suspendre le compte
+        </button>
+    </form>
+    <p>Le compte sera gelé immédiatement.</p>
+
+{% elif user.status == 'suspended' %}
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="reactivate">
+        <button type="submit" style="background: green; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+            Réactiver le compte
+        </button>
+    </form>
+    <p>Le compte redeviendra opérationnel.</p>
+
+{% else %}
+    <p>Ce compte est en attente d'activation (OTP non validé). Aucune action possible pour l'instant.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'admin_metrics' %}" style="color: #3b82f6; text-decoration: none;">Retour à la liste des utilisateurs</a>
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color: green; margin-top: 12px; font-weight: bold;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

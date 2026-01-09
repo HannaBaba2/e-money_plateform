@@ -1,0 +1,33 @@
+<!-- templates/admin/metrics.html -->
+{% extends 'base.html' %}
+{% block title %}Métriques Administrateur{% endblock %}
+{% block content %}
+
+<h2>Résumé de la plateforme</h2>
+
+<h3>Utilisateurs</h3>
+<ul>
+    <li>Nombre total d'utilisateurs : {{ total_users }}</li>
+    <li>Comptes actifs : {{ active_users }}</li>
+    <li>Comptes suspendus : {{ suspended_users }}</li>
+    <li>Comptes en attente d'activation : {{ pending_users }}</li>
+</ul>
+
+<h3>Transactions</h3>
+<ul>
+    <li>Volume total des transactions : {{ total_volume |floatformat:2 }} FCFA</li>
+    <li>Montant total des commissions perçues : {{ total_fees|floatformat:2 }} FCFA</li>
+    <li>Nombre total de transactions : {{ total_transactions }}</li>
+</ul>
+
+<h2>Gestion des comptes</h2>
+<ul>
+    <li><a href="{% url 'admin:accounts_user_changelist' %}">Suspendre ou réactiver un utilisateur</a></li>
+</ul>
+
+<h2>Historique complet</h2>
+<ul>
+    <li><a href="{% url 'admin:transactions_transaction_changelist' %}">Consulter toutes les transactions</a></li>
+</ul>
+
+{% endblock %}

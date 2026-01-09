@@ -1,0 +1,50 @@
+<!-- templates/admin/user_list.html -->
+{% extends 'base.html' %}
+{% block title %}Admin - Utilisateurs{% endblock %}
+{% block content %}
+
+<h2>Supervision de la plateforme</h2>
+
+<h3>Résumé des métriques</h3>
+<ul>
+    <li>Nombre total d'utilisateurs : {{ total_users }}</li>
+    <li>Comptes actifs : {{ active_users }}</li>
+    <li>Comptes suspendus : {{ suspended_users }}</li>
+    <li>Comptes en attente d'activation : {{ pending_users|default:"0" }}</li>
+</ul>
+
+<h2>Liste des utilisateurs</h2>
+{% if users %}
+<table>
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Statut</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone_number|default:"-" }}</td>
+            <td>
+                {% if u.status == 'active' %}Actif
+                {% elif u.status == 'suspended' %}Suspendu
+                {% else %}En attente{% endif %}
+            </td>
+            <td>
+                <a href="{% url 'admin_metrics_with_id' u.id %}">Voir détails</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucun utilisateur trouvé.</p>
+{% endif %}
+
+{% endblock %}

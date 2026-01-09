@@ -5,5 +5,8 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">S'inscrire</button>
+    <a href="{% url 'dashboard' %}">
+                Retouner
+    </a>
 </form>
 {% endblock %}

@@ -21,12 +21,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from accounts import views as accounts_views
+from accounts.views import admin_metrics
+
 
 
 urlpatterns = [
     
-    path('', accounts_views.home_view, name='home'),  # page publique
-    path('admin/', admin.site.urls),
+    path('', accounts_views.home_view, name='home'),
+    path('admin/metrics/', admin_metrics, name='admin_metrics'),
+    path('admin/metrics/user/<int:user_id>/', admin_metrics, name='admin_metrics_with_id'),    path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),      
     path('transactions/', include('transactions.urls')),  
 ]

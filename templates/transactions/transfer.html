@@ -43,12 +43,15 @@
         </div>
 
         <div class="flex flex-wrap gap-3">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center">
+            <button type="submit">
                 <i class="fas fa-paper-plane mr-2"></i> Transférer
             </button>
             <a href="{% url 'dashboard' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-medium">
                 Annuler
             </a>
+           <br/>
+            <a href="{% url 'admin_metrics' %}">Retour à la liste des utilisateurs</a>
+
         </div>
     </form>
 </div>

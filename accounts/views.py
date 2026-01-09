@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -7,7 +7,8 @@ from .forms import SignUpForm
 from .models import User, VirtualAccount
 from core.utils import create_otp
 from django.utils import timezone
-
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Sum
 
 
 
@@ -66,7 +67,7 @@ def dashboard(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('signup')
+    return redirect('login')
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -85,9 +86,52 @@ def login_view(request):
         if user is not None:
             if user.status == 'active':
                 login(request, user)
-                return redirect('dashboard')
+                if user.is_staff:
+                    return redirect('admin_metrics')
+                else:
+                    return redirect('dashboard')
             else:
                 messages.error(request, "Votre compte est suspendu ou en attente d'activation.")
         else:
             messages.error(request, "Identifiants invalides.")
     return render(request, 'accounts/login.html')
+
+
+
+
+@staff_member_required
+def admin_metrics(request, user_id=None):
+    if user_id:
+        user = get_object_or_404(User, id=user_id)
+        if request.method == "POST":
+            action = request.POST.get("action")
+            if action == "suspend":
+                user.status = "suspended"
+                user.is_suspended = True
+                messages.success(request, f"Utilisateur {user.username} suspendu.")
+            elif action == "reactivate":
+                user.status = "active"
+                user.is_suspended = False
+                messages.success(request, f"Utilisateur {user.username} réactivé.")
+            user.save()
+            return redirect('admin_metrics_with_id', user_id=user.id)
+
+        return render(request, 'admin/user_detail.html', {
+            'user': user,
+            'show_suspend': user.status == 'active',
+            'show_reactivate': user.status == 'suspended',
+        })
+
+    users = User.objects.all().order_by('-created_at')
+    total_users = users.count()
+    active_users = users.filter(status='active').count()
+    suspended_users = users.filter(status='suspended').count()
+    pending_users = users.filter(status='pending').count()
+
+    return render(request, 'admin/user_list.html', {
+        'users': users,
+        'total_users': total_users,
+        'active_users': active_users,
+        'suspended_users': suspended_users,
+        'pending_users': pending_users or 0,
+    })

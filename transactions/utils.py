@@ -65,7 +65,7 @@ def transfer(sender_user, receiver_phone, amount):
         transaction.save()
 
         logger.info(
-            f"[TRANSFERT] '{sender_user.username}' → '{receiver_user.username}' : {amount} FCFA. "
+            f"[TRANSFERT] '{sender_user.username}'  '{receiver_user.username}' : {amount} FCFA. "
             f"Référence: {transaction.reference}. Solde émetteur: {sender_account.balance} FCFA"
         )
 

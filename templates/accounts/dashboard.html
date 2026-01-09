@@ -1,3 +1,4 @@
+<!-- templates/accounts/dashboard.html -->
 {% extends 'base.html' %}
 {% block title %}Tableau de bord{% endblock %}
 {% block content %}
@@ -5,20 +6,22 @@
 <h2>Solde disponible</h2>
 <p>{{ user.virtualaccount.balance }} FCFA</p>
 
-<h2>Opérations rapides</h2>
-<ul>
-    <li><a href="{% url 'deposit' %}">Dépôt</a></li>
-    <li><a href="{% url 'transfer' %}">Transfert</a></li>
-    <li><a href="{% url 'withdraw' %}">Retrait</a></li>
-</ul>
-
 <h2>Statut du compte</h2>
 {% if user.status == 'active' %}
-    <p>Actif</p>
+    <p>Actif !! vous pouvez effectuer des opérations.</p>
+    
+    <h2>Opérations rapides</h2>
+    <ul>
+        <li><a href="{% url 'deposit' %}">Dépôt</a></li>
+        <li><a href="{% url 'transfer' %}">Transfert</a></li>
+        <li><a href="{% url 'withdraw' %}">Retrait</a></li>
+    </ul>
+
 {% elif user.status == 'suspended' %}
-    <p>Suspendu</p>
+    <p style="color: red;">Votre Compte à été Suspendu  aucune opération (dépôt, transfert, retrait) n'est autorisée.</p>
+
 {% else %}
-    <p>En attente</p>
+    <p style="color: orange;">En attente d'activation veuillez vérifier votre e-mail pour le code OTP.</p>
 {% endif %}
 
 <h2>Historique des transactions</h2>
@@ -52,5 +55,8 @@
 {% else %}
     <p>Aucune transaction pour le moment.</p>
 {% endif %}
+
+<a href="{% url 'admin_metrics' %}" style="color: #3b82f6; text-decoration: none;">Retour à la liste des utilisateurs</a>
+
 
 {% endblock %}
