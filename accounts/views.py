@@ -29,15 +29,21 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 def verify_otp(request):
+    user_id = request.session.get('user_id')
+    user = None
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            pass
+
     if request.method == 'POST':
         otp_code = request.POST.get('otp')
-        user_id = request.session.get('user_id')
-        if user_id:
+        if user_id and user:
             from core.models import OTP
             try:
                 otp = OTP.objects.filter(user_id=user_id, code=otp_code).latest('created_at')
                 if otp.is_valid():
-                    user = otp.user
                     user.status = 'active'
                     user.save()
                     VirtualAccount.objects.get_or_create(user=user)
@@ -45,12 +51,29 @@ def verify_otp(request):
                     messages.success(request, "Compte activé avec succès !")
                     return redirect('dashboard')
                 else:
-                    messages.error(request, "OTP expiré .")
+                    messages.error(request, "OTP expiré.")
             except OTP.DoesNotExist:
                 messages.error(request, "OTP invalide.")
         else:
-            messages.error(request,"Session invalide.")
-    return render(request, 'accounts/verify_otp.html')
+            messages.error(request, "Session invalide.")
+
+    return render(request, 'accounts/verify_otp.html', {
+        'user': user,
+        'user_id': user_id,
+    })
+
+def resend_otp(request):
+    if request.method == "POST":
+        user_id = request.POST.get("user_id")
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                create_otp(user, minutes=2)
+                messages.info(request, "Un nouveau code OTP vous a été envoyé par e-mail.")
+            except User.DoesNotExist:
+                messages.error(request, "Utilisateur non trouvé.")
+        return redirect('verify_otp')
+    return redirect('signup')
 
 @login_required
 def dashboard(request):
@@ -84,14 +107,15 @@ def login_view(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            if user.status == 'active':
-                login(request, user)
-                if user.is_staff:
-                    return redirect('admin_metrics')
-                else:
-                    return redirect('dashboard')
+            login(request,user)
+        #     if user.status == 'active':
+        #         login(request, user)
+            if user.is_staff:
+                return redirect('admin_metrics')
             else:
-                messages.error(request, "Votre compte est suspendu ou en attente d'activation.")
+                return redirect('dashboard')
+        #     else:
+        #         messages.error(request, "Votre compte est suspendu ou en attente d'activation contacter l'administrateur.")
         else:
             messages.error(request, "Identifiants invalides.")
     return render(request, 'accounts/login.html')

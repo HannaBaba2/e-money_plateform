@@ -18,7 +18,7 @@
     </ul>
 
 {% elif user.status == 'suspended' %}
-    <p style="color: red;">Votre Compte à été Suspendu  aucune opération (dépôt, transfert, retrait) n'est autorisée.</p>
+    <p style="color: red;">Votre Compte à été Suspendu  aucune opération (dépôt, transfert, retrait) n'est autorisée veuillez contactez l'admin pour eactiver votre compte .</p>
 
 {% else %}
     <p style="color: orange;">En attente d'activation veuillez vérifier votre e-mail pour le code OTP.</p>
@@ -56,7 +56,7 @@
     <p>Aucune transaction pour le moment.</p>
 {% endif %}
 
-<a href="{% url 'admin_metrics' %}" style="color: #3b82f6; text-decoration: none;">Retour à la liste des utilisateurs</a>
+{% comment %} <a href="{% url 'admin_metrics' %}" style="color: #3b82f6; text-decoration: none;">Retour à la liste des utilisateurs</a> {% endcomment %}
 
 
 {% endblock %}

@@ -1,4 +1,3 @@
-<!-- templates/admin/user_detail.html -->
 {% extends 'base.html' %}
 {% block title %}Admin - Détails de {{ user.username }}{% endblock %}
 {% block content %}
@@ -44,7 +43,7 @@
     <form method="post" style="display: inline;">
         {% csrf_token %}
         <input type="hidden" name="action" value="reactivate">
-        <button type="submit" style="background: green; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        <button type="submit">
             Réactiver le compte
         </button>
     </form>
