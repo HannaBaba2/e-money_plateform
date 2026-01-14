@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.core.validators import MinValueValidator
+
 
 class TimeStampMixin(models.Model):
     
@@ -37,7 +39,7 @@ class User(AbstractUser, TimeStampMixin):
 
 class VirtualAccount(TimeStampMixin):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='virtualaccount')
-    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0,validators=[MinValueValidator(0)])
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

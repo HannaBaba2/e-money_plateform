@@ -168,9 +168,9 @@ LOGGING = {
             'formatter': 'verbose',
         },
     },
-    'root': {
-        'handlers': ['file'],
-    },
+    # 'root': {
+    #     'handlers': ['file'],
+    # },
     'loggers': {
         'transactions.utils': {
             'handlers': ['file'],

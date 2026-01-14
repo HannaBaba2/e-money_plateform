@@ -3,8 +3,7 @@ from django.urls import reverse
 from .models import User
 
 class AccountCreationTests(TestCase):
-    def setUp(self):
-        self.client = Client()
+    
 
     def test_signup_page_loads(self):
         
@@ -15,10 +14,13 @@ class AccountCreationTests(TestCase):
         
         response = self.client.post(reverse('signup'), {
             'username': 'testuser',
+            'first_name': 'Test',         
+            'last_name': 'User',           
             'email': 'test@example.com',
             'phone_number': '98765432',
-            'password': 'securepassword123',
-            'confirm_password': 'securepassword123'
+            'gender': 'M',                 
+            'password': 'SecurePass123!',   
+            'confirm_password': 'SecurePass123!'
         })
         
         self.assertEqual(response.status_code, 302)
